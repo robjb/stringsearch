@@ -37,12 +37,17 @@ namespace TestStringSearch
             return seconds / runs;
         }
 
+        // I realize this is a silly unit test, and performance will vary
+        // by hardware. However, both algorithms should be able to pass
+        // this test easily on modest hardware.
         public static void TestAverageCountTime(IPrefixCounter<char[]> counter)
         {
-            const double maxAvg = 0.1;
+            const int runs = 300;       // Keep runs small so unit tests don't run long
+            const int chars = 300000;   // Either algorithm should be able to process 300k
+            const double maxAvg = 0.1;  // characters in a 10th of a second easily.
             const double macheps = Double.Epsilon;
             
-            var avgTime = TimeAverageCount(counter, 300, 300000);
+            var avgTime = TimeAverageCount(counter, runs, chars);
             Assert.IsTrue((maxAvg - avgTime) >= macheps);
         }
     }

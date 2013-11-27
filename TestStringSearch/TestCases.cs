@@ -16,16 +16,19 @@ namespace TestStringSearch
             get { return _simpleCases; }
         }
 
+        // Expected prefix counts for SimpleTestCases
         public static IList<int[]> SimpleExpectedCounts
         {
             get { return _simpleCountList; }
         }
 
+        // Expect prefix counts for CreateCyclicTestCase(SimpleTestCases.First(), 16)
         public static int[] SmallCyclicExpectedCounts
         {
             get { return _smallExpectedCount; }
         }
 
+        // Expect prefix counts for CreateCyclicTestCase(SimpleTestCases.First(), 256)
         public static int[] LargeCyclicExpectedCounts
         {
             get { return _largeExpectedCount; }
@@ -68,12 +71,14 @@ namespace TestStringSearch
 
         #region Test Case Expected Count Arrays
 
+        // Calculated by hand
         private static readonly int[][] _expectedSimpleCounts = new [] {
             new [] { 0, 4, 3, 3, 2, 2, 1, 1},
             new [] { 0, 9, 4, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
             new [] { 0, 9, 3, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1 }
         };
 
+        // Calculated by Z and verified with KMP
         private static readonly int[] _smallExpectedCount = new []
         {
             0, 68, 51, 51, 34, 34, 17, 17, 
@@ -95,6 +100,7 @@ namespace TestStringSearch
             1, 1, 1, 1, 1, 1, 1
         };
 
+        // Calculated by Z and verified with KMP
         private static readonly int[] _largeExpectedCount = new[]
         {
             0, 1028, 771, 771, 514, 514, 257, 257, 
@@ -370,6 +376,8 @@ namespace TestStringSearch
 
         public static char[] CreateCyclicTestCase(string test, int repetitions)
         {
+            // An off-by-one error had caused KMP to initially fail on cyclic text with
+            // overlapping prefix substrings, but only after repetitions was >= 16.
             if (repetitions < 16)
             {
                 throw new ArgumentOutOfRangeException("repetitions < 16");

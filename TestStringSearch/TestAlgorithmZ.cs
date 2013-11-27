@@ -17,37 +17,37 @@ namespace TestStringSearch
         [Test]
         public void TestTinyCases()
         {
-            PrefixCounterTestLogic.CompareTinyCounts(_z);
+            PrefixCounterTestLogic.TestTinyTextCounts(_z);
         }
 
         [Test]
         public void TestSimpleCase1()
         {
-            PrefixCounterTestLogic.CompareSimpleCounts(_z, 1);
+            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 1);
         }
 
         [Test]
         public void TestSimpleCase2()
         {
-            PrefixCounterTestLogic.CompareSimpleCounts(_z, 2);
+            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 2);
         }
 
         [Test]
         public void TestSimpleCase3()
         {
-            PrefixCounterTestLogic.CompareSimpleCounts(_z, 3);
+            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 3);
         }
 
         [Test]
         public void TestSmallCyclicCase()
         {
-            PrefixCounterTestLogic.CompareSmallCyclicCounts(_z);
+            PrefixCounterTestLogic.TestSmallCyclicTextCounts(_z);
         }
 
         [Test]
         public void TestLargeCyclicCase()
         {
-            PrefixCounterTestLogic.CompareLargeCyclicCounts(_z);
+            PrefixCounterTestLogic.TestLargeCyclicTextCounts(_z);
         }
 
         [Test]
