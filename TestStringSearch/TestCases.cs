@@ -22,13 +22,23 @@ namespace TestStringSearch
             get { return _simpleCountList; }
         }
 
-        // Expect prefix counts for CreateCyclicTestCase(SimpleTestCases.First(), 16)
+        public static char[] SmallCyclicTestCase
+        {
+            get { return CreateCyclicTestCase(new string(GetSimpleCase(1)), 16); }
+        }
+
+        public static char[] LargeCyclicTestCase
+        {
+            get { return CreateCyclicTestCase(new string(GetSimpleCase(1)), 256); }
+        }
+
+        // Expect prefix counts for SmallCyclicTestCase
         public static int[] SmallCyclicExpectedCounts
         {
             get { return _smallExpectedCount; }
         }
 
-        // Expect prefix counts for CreateCyclicTestCase(SimpleTestCases.First(), 256)
+        // Expect prefix counts for LargeCyclicTestCase
         public static int[] LargeCyclicExpectedCounts
         {
             get { return _largeExpectedCount; }
@@ -39,9 +49,9 @@ namespace TestStringSearch
         static TestCases()
         {
             _simpleCases = new List<char[]>(new[] {
-                "abababa".ToCharArray(),
-                "aabcabcaacaabxaacx".ToCharArray(),
-                "babbbababbbb".ToCharArray()
+                Chars("abababa"),
+                Chars("aabcabcaacaabxaacx"),
+                Chars("babbbababbbb")
             });
             // Expected prefix counts for simple test cases above
             _simpleCountList = new List<int[]>(_expectedSimpleCounts);
@@ -49,13 +59,13 @@ namespace TestStringSearch
 
         #region Random Generation
 
-        private static readonly Random _random = new Random();
+        public static readonly Random Rand = new Random();
 
         public static IEnumerable<char> RandomChars(int len)
         {
             for (int i = 0; i < len; ++i)
             {
-                yield return (char)(_random.Next(0, 25) + 97);
+                yield return (char)(Rand.Next(0, 25) + 97);
             }
         }
 
@@ -364,6 +374,23 @@ namespace TestStringSearch
 
         #endregion
 
+        #region Methods
+
+        // Shorthand for ToCharArray()
+        public static char[] Chars(this string s)
+        {
+            return s.ToCharArray();
+        }
+
+        public static char[] GetSimpleCase(int i)
+        {
+            if (i < 1)
+            {
+                throw new ArgumentOutOfRangeException("i < 1");
+            }
+            return SimpleTestCases[i - 1];
+        }
+
         public static char[] GetSimpleCase(int i, out int[] expectedCount)
         {
             if (i < 1)
@@ -371,10 +398,10 @@ namespace TestStringSearch
                 throw new ArgumentOutOfRangeException("i < 1");
             }
             expectedCount = SimpleExpectedCounts[i - 1];
-            return SimpleTestCases[i - 1];
+            return GetSimpleCase(i);
         }
 
-        public static char[] CreateCyclicTestCase(string test, int repetitions)
+        public static char[] CreateCyclicTestCase(string s1, int repetitions)
         {
             // An off-by-one error had caused KMP to initially fail on cyclic text with
             // overlapping prefix substrings, but only after repetitions was >= 16.
@@ -382,12 +409,14 @@ namespace TestStringSearch
             {
                 throw new ArgumentOutOfRangeException("repetitions < 16");
             }
-            string cyclicText = test;
+            string s2 = s1;
             for (int i = 0; i < repetitions; i++)
             {
-                cyclicText = cyclicText + test;
+                s2 += s1;
             }
-            return cyclicText.ToCharArray();
+            return s2.Chars();
         }
+
+        #endregion
     }
 }

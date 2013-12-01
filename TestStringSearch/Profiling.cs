@@ -18,18 +18,18 @@ namespace TestStringSearch
             return stopwatch.Elapsed.TotalSeconds;
         }
 
-        public static double TimeAverageCount(IPrefixCounter<char[]> counter, int runs, int textLen)
+        public static double TimeAverageCount(IPrefixCounter<char[]> counter, int runs, int chars)
         {
             if (runs < 100)
             {
                 throw new ArgumentOutOfRangeException("runs < 100 will produce unreliable results.");
             }
-            if (textLen < 1)
+            if (chars < 1)
             {
-                throw new ArgumentOutOfRangeException("textLen < 1");
+                throw new ArgumentOutOfRangeException("chars < 1");
             }
             double seconds = 0.0;
-            foreach (var s in TestCases.RandomCharArrays(runs, textLen))
+            foreach (var s in TestCases.RandomCharArrays(runs, chars))
             {
                 int[] count;
                 seconds += TimePrefixCounting(counter, s, out count);
@@ -42,9 +42,9 @@ namespace TestStringSearch
         // this test easily on modest hardware.
         public static void TestAverageCountTime(IPrefixCounter<char[]> counter)
         {
-            const int runs = 300;       // Keep runs small so unit tests don't run long
-            const int chars = 300000;   // Either algorithm should be able to process 300k
-            const double maxAvg = 0.1;  // characters in a 10th of a second easily.
+            const int runs = 100; // Keep runs small so unit tests don't run long
+            const int chars = 300000;   // Either algorithm hould be able to process
+            const double maxAvg = 0.1;  // 300k characters in a 10th of a second easily.
             const double macheps = Double.Epsilon;
             
             var avgTime = TimeAverageCount(counter, runs, chars);

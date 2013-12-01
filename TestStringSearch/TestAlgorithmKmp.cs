@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using StringSearch;
 
 namespace TestStringSearch
@@ -14,46 +15,56 @@ namespace TestStringSearch
             _kmp = new AlgorithmKmp();
         }
 
-        [Test]
-        public void TestTinyCases()
+        [Test] // A KMP specific test
+        public void PartialMatchAtZeroIsZero()
         {
-            PrefixCounterTestLogic.TestTinyTextCounts(_kmp);
+            var testCases = new[] {
+                TestCases.GetSimpleCase(1),
+                TestCases.GetSimpleCase(2),
+                TestCases.GetSimpleCase(3),
+                TestCases.SmallCyclicTestCase,
+                TestCases.LargeCyclicTestCase
+            };
+            // KMP search implementation assumes pmt[0] == 0
+            // Other variations may use -1 as an invalid value
+            foreach (var s in testCases)
+            {
+                int[] count;
+                var pmt1 = AlgorithmKmp.PartialMatchTable(s);
+                var pmt2 = AlgorithmKmp.CountedPmt(s, out count);
+                Assert.AreEqual(0, pmt1[0]);
+                Assert.AreEqual(0, pmt2[0]);
+            }
         }
 
         [Test]
-        public void TestSimpleCase1()
+        public void PrefixCountsAreValid()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_kmp, 1);
+            _kmp.PrefixCountsShouldMatchExpected();
         }
 
         [Test]
-        public void TestSimpleCase2()
+        public void PrefixCountTimeIsAcceptable()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_kmp, 2);
+            _kmp.PrefixCountTimeShouldBeAcceptable();
         }
 
         [Test]
-        public void TestSimpleCase3()
+        public void SearchSuccessReturnsMatchIndex()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_kmp, 3);
+            _kmp.SearchShouldReturnMatchIndex();
         }
 
         [Test]
-        public void TestSmallCyclicCase()
+        public void SearchFailureReturnsN()
         {
-            PrefixCounterTestLogic.TestSmallCyclicTextCounts(_kmp);
+            _kmp.SearchFailureShouldReturnN();
         }
 
         [Test]
-        public void TestLargeCyclicCase()
+        public void SearchAllReturnsAllMatchIndices()
         {
-            PrefixCounterTestLogic.TestLargeCyclicTextCounts(_kmp);
-        }
-
-        [Test]
-        public void TestPerformance()
-        {
-            Profiling.TestAverageCountTime(_kmp);
+            _kmp.SearchAllShouldReturnAllMatches();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using StringSearch;
 
 namespace TestStringSearch
@@ -15,45 +16,33 @@ namespace TestStringSearch
         }
 
         [Test]
-        public void TestTinyCases()
+        public void PrefixCountsAreValid()
         {
-            PrefixCounterTestLogic.TestTinyTextCounts(_z);
+            _z.PrefixCountsShouldMatchExpected();
         }
 
         [Test]
-        public void TestSimpleCase1()
+        public void PrefixCountTimeIsAcceptable()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 1);
+            _z.PrefixCountTimeShouldBeAcceptable();
         }
 
         [Test]
-        public void TestSimpleCase2()
+        public void SearchSuccessReturnsMatchIndex()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 2);
+            _z.SearchShouldReturnMatchIndex();
         }
 
         [Test]
-        public void TestSimpleCase3()
+        public void SearchFailureReturnsN()
         {
-            PrefixCounterTestLogic.TestSimpleTextCounts(_z, 3);
+            _z.SearchFailureShouldReturnN();
         }
 
         [Test]
-        public void TestSmallCyclicCase()
+        public void SearchAllReturnsAllMatchIndices()
         {
-            PrefixCounterTestLogic.TestSmallCyclicTextCounts(_z);
-        }
-
-        [Test]
-        public void TestLargeCyclicCase()
-        {
-            PrefixCounterTestLogic.TestLargeCyclicTextCounts(_z);
-        }
-
-        [Test]
-        public void TestPerformance()
-        {
-            Profiling.TestAverageCountTime(_z);
+            _z.SearchAllShouldReturnAllMatches();
         }
     }
 }

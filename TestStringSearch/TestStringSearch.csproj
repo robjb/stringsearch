@@ -46,6 +46,7 @@
     <Compile Include="PrefixCounterTestLogic.cs" />
     <Compile Include="Profiling.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchAlgorithmTestLogic.cs" />
     <Compile Include="TestAlgorithmKmp.cs" />
     <Compile Include="TestAlgorithmZ.cs" />
     <Compile Include="TestCases.cs" />

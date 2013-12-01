@@ -12,6 +12,18 @@ namespace StringSearch
     // count prefixes directly from s (rather than z.)
     public class AlgorithmZ : ISearchAlgorithm<int[]>, IPrefixCounter<int[]>, IPrefixCounter<char[]>
     {
+        private static T[] Concat<T>(T[] t1, T[] t2)
+        {
+            int n1 = t1.Length;
+            int n2 = t2.Length;
+            var s = new T[n1 + n2];
+
+            Array.Copy(t1, s, n1);
+            Array.Copy(t2, 0, s, n1, n2);
+
+            return s;
+        }
+
         #region IPrefixCounter
 
         public int[] CountPrefixes(int[] z)
@@ -33,9 +45,54 @@ namespace StringSearch
             get { return "Z-Algorithm"; }
         }
 
-        public int[] Run(char[] s)
+        public int[] PreProcess(char[] s)
         {
             return Z(s);
+        }
+
+        public int Search(char[] s, char[] key)
+        {
+            int n = s.Length;
+            int m = key.Length;
+
+            // Build s2 by prepending key to s
+            var s2 = Concat(key, s);
+
+            // Searching Z(s2) for prefix length m
+            // should yield occurences of key in s2
+            var z = Z(s2);
+            for (int i = m; i < z.Length; i++)
+            {
+                if (z[i] >= m)
+                {
+                    // subtract key length m to index s from Z(s2)
+                    return i - m; 
+                }
+            }
+            return n; // no matches
+        }
+
+        public int[] SearchAll(char[] s, char[] key)
+        {
+            int m = key.Length;
+
+            // Build s2 by prepending key to s
+            var s2 = Concat(key, s);
+
+            // Searching Z(s2) for prefix length m
+            // should yield occurences of key in s2
+            var z = Z(s2);
+
+            var startIndices = new List<int>();
+            for (int i = m; i < z.Length; i++)
+            {
+                if (z[i] >= m)
+                {
+                    // subtract key length m to index s from Z(s2)
+                    startIndices.Add(i - m);
+                }
+            }
+            return startIndices.ToArray();
         }
 
         #endregion
@@ -76,8 +133,8 @@ namespace StringSearch
             // Used to advance right edge of substring interval until
             // S[left .. right] represents the longest proper prefix
             // substring such that 1 <= left <= i <= right. This also
-            // produces z[i], the longest substring in S starting at 
-            // position i that also matches a prefix of S.
+            // produces z[i], length of the longest substring in S 
+            // starting at position i, which is also a prefix of S.
             Action<int> scanWhileEq = i =>
             {
                 // Scans along S, advancing right edge of the

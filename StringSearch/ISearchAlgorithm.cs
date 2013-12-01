@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace StringSearch
+﻿namespace StringSearch
 {
-    // T is the type of the object produced by running the algorithm
-    public interface ISearchAlgorithm<T>
+    // T is the type of the object produced by algorithm pre-processing
+    public interface ISearchAlgorithm<out T>
     {
         string Name { get; }
 
-        T Run(char[] s);
+        T PreProcess(char[] s);
 
-        // Searching not yet implemented in algorithm classes
-        // int Search(T result, string key)
+        int Search(char[] s, char[] key);
+
+        int[] SearchAll(char[] s, char[] key);
     }
 }
